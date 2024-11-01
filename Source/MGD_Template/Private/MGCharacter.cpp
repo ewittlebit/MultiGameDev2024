@@ -18,8 +18,9 @@ void AMGCharacter::PMoveCharacter(FVector2d axis)
 
 	controlRot.Yaw = GetControlRotation().Yaw;
 
-	AddMovementInput(WorldDirection:UKismetMathLibrary::GetForwardVector(ControlRot), axis.Y);
+	AddMovementInput(UKismetMathLibrary::GetForwardVector(controlRot), axis.Y);
 
-	AddMovementInput(WorldDirection:UKismetMathLibrary::GetForwardVector(ControlRot), axis.X);
+	AddMovementInput(UKismetMathLibrary::GetForwardVector(controlRot), axis.X);
 }
+
 

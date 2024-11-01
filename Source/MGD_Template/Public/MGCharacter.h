@@ -15,7 +15,8 @@ public:
 	// Sets default values for this character's properties
 	AMGCharacter();
 
-	void PMoveCharacter(FVector2d axis);
+	UFUNCTION(BlueprintCallable, Category="Movement")
+	void PMoveCharacter(FVector2D axis);
 
 
 };
