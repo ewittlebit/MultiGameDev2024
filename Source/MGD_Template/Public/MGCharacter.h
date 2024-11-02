@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DiffResults.h"
 #include "GameFramework/Character.h"
 #include "MGCharacter.generated.h"
 
@@ -26,6 +27,12 @@ public:
 
     UFUNCTION(BlueprintImplementableEvent, Category="Shooting")
 	void OnTriggerChange(bool pullOrRelease);
+
+    UFUNCTION(Server, Reliable, Category="Shooting")
+	void Server_OnTriggerChange(const bool pullOrRelease);
+
+    UFUNCTION(NetMulticast, Reliable, Category="Shooting")
+	void Multi_OnTriggerChange(const bool pullOrRelease);
 
 private:
 	bool bIsHoldingTrigger;

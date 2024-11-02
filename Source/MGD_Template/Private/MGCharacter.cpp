@@ -27,6 +27,23 @@ void AMGCharacter::PMoveCharacter(FVector2d axis)
 
 void AMGCharacter::HoldTrigger(bool pullOrRelease)
 {
+	if (HasAuthority())
+	{
+		Multi_OnTriggerChange(pullOrRelease);
+		return;
+	}
+
+	Server_OnTriggerChange(pullOrRelease);
+}
+
+void AMGCharacter::Multi_OnTriggerChange_Implementation(const bool pullOrRelease)
+{
+	Multi_OnTriggerChange(pullOrRelease);
+}
+
+void AMGCharacter::Server_OnTriggerChange_Implementation(const bool pullOrRelease)
+{
+	HoldTrigger(pullOrRelease);
 	bIsHoldingTrigger=pullOrRelease;
 	OnTriggerChange(bIsHoldingTrigger);
 }
