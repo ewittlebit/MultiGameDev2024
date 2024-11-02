@@ -38,14 +38,13 @@ void AMGCharacter::HoldTrigger(bool pullOrRelease)
 
 void AMGCharacter::Multi_OnTriggerChange_Implementation(const bool pullOrRelease)
 {
-	Multi_OnTriggerChange(pullOrRelease);
+	bIsHoldingTrigger=pullOrRelease;
+	OnTriggerChange(bIsHoldingTrigger);
 }
 
 void AMGCharacter::Server_OnTriggerChange_Implementation(const bool pullOrRelease)
 {
-	HoldTrigger(pullOrRelease);
-	bIsHoldingTrigger=pullOrRelease;
-	OnTriggerChange(bIsHoldingTrigger);
+	Multi_OnTriggerChange(pullOrRelease);
 }
 
 
