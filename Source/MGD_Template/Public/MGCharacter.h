@@ -18,6 +18,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Movement")
 	void PMoveCharacter(FVector2D axis);
 
+	UFUNCTION(BlueprintCallable, Category="Shooting")
+    bool IsHoldingTrigger() const {return bIsHoldingTrigger;}
 
+    UFUNCTION(BlueprintCallable, Category="Shooting")
+	void HoldTrigger(bool pullOrRelease);
+
+    UFUNCTION(BlueprintImplementableEvent, Category="Shooting")
+	void OnTriggerChange(bool pullOrRelease);
+
+private:
+	bool bIsHoldingTrigger;
 };
 

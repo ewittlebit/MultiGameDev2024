@@ -11,6 +11,8 @@ AMGCharacter::AMGCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	bIsHoldingTrigger=false;
 }
 void AMGCharacter::PMoveCharacter(FVector2d axis)
 {
@@ -21,6 +23,12 @@ void AMGCharacter::PMoveCharacter(FVector2d axis)
 	AddMovementInput(UKismetMathLibrary::GetForwardVector(controlRot), axis.Y);
 
 	AddMovementInput(UKismetMathLibrary::GetForwardVector(controlRot), axis.X);
+}
+
+void AMGCharacter::HoldTrigger(bool pullOrRelease)
+{
+	bIsHoldingTrigger=pullOrRelease;
+	OnTriggerChange(bIsHoldingTrigger);
 }
 
 
