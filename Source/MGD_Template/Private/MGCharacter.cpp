@@ -29,22 +29,25 @@ void AMGCharacter::HoldTrigger(bool pullOrRelease)
 {
 	if (HasAuthority())
 	{
-		Multi_OnTriggerChange(pullOrRelease);
+		Multi_OnTriggerChanged(pullOrRelease);
+		OnTriggerChanged(bIsHoldingTrigger);
 		return;
 	}
 
-	Server_OnTriggerChange(pullOrRelease);
+	    Server_OnTriggerChanged(pullOrRelease);
 }
 
-void AMGCharacter::Multi_OnTriggerChange_Implementation(const bool pullOrRelease)
+void AMGCharacter::Server_OnTriggerChanged_Implementation(const bool pullOrRelease)
+{
+	Multi_OnTriggerChanged(pullOrRelease);
+}
+
+void AMGCharacter::Multi_OnTriggerChanged_Implementation(const bool pullOrRelease)
 {
 	bIsHoldingTrigger=pullOrRelease;
-	OnTriggerChange(bIsHoldingTrigger);
+	OnTriggerChanged(bIsHoldingTrigger);
 }
 
-void AMGCharacter::Server_OnTriggerChange_Implementation(const bool pullOrRelease)
-{
-	Multi_OnTriggerChange(pullOrRelease);
-}
+
 
 
