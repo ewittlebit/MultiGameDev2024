@@ -24,6 +24,8 @@ public:
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
+	virtual void Tick(float DeltaSeconds) override;
+
 protected:
 
 	// run code when pickup is activated
@@ -40,4 +42,12 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category=Pickup)
 	TSubclassOf<AActor> PickupActorClass;
+
+    UPROPERTY(EditAnywhere, Category=Pickup)
+	float ResetTime;
+
+	UPROPERTY(EditDefaultsOnly, Category=Pickup)
+	float MeshRotateSpeed;
+	
+	FTimerHandle TH_ReactivateTimer;
 };

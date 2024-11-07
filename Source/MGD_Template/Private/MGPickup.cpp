@@ -33,6 +33,10 @@ AMGPickup::AMGPickup()
 
     // default allowed pickup class
 	PickupActorClass= AActor::StaticClass();
+
+	ResetTime = 10.0f;
+
+	MeshRotateSpeed = 50.0f;
 }
 
 void AMGPickup::NotifyActorBeginOverlap(AActor* OtherActor)
@@ -50,17 +54,30 @@ void AMGPickup::NotifyActorBeginOverlap(AActor* OtherActor)
 	}
 }
 
+void AMGPickup::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	
+// spinning mesh based on rotation speed
+	Mesh->AddLocalRotation(FRotator(0.0f, MeshRotateSpeed * DeltaSeconds, 0.0f));
+
 void AMGPickup::ActivatePickup(AActor* pickupActor)
 {
 	BP_OnActivatePickup(pickupActor);
 
 	DeactivatePickup();
+	
+    if (ResetTime > 0.0f)
+    {
+    	// if so set timer to reactivate pickup
+	    GetWorld()->GetTimerManager().SetTimer(TH_ReactivateTimer, this, &AMGPickup::ReactivatePickup, ResetTime);
+    }
 }
 
 void AMGPickup::ReactivatePickup_Implementation()
 {
 	//is this server version
-	if (HasAuthority());
+	if (HasAuthority())
 	{
 		PickupTrigger->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	}
