@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/Actor.h"
 #include "MGPickup.generated.h"
 
@@ -15,12 +16,25 @@ public:
 	// Sets default values for this actor's properties
 	AMGPickup();
 
+	UPROPERTY(EditAnywhere, Category=Components)
+	UCapsuleComponent* PickupTrigger;
+
+	UPROPERTY(EditAnywhere, Category=Components)
+	UStaticMeshComponent* Mesh;
+
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	// run code when pickup is activated
+	void ActivatePickup(AActor* pickupActor);
 
+	UFUNCTION(BlueprintImplementableEvent, Category=Pickup)
+	void BP_OnActivatePickup(AActor* pickupActor);
+
+    UFUNCTION(NetMulticast, Reliable, Category=Replication)
+	void DeactivatePickup();
+
+	UPROPERTY(EditDefaultsOnly, Category=Pickup)
+	TSubclassOf<AActor> PickupActorClass;
 };

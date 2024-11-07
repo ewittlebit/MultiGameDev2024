@@ -9,19 +9,62 @@ AMGPickup::AMGPickup()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// create the component
+	PickupTrigger = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Collision"));
+	// set component to be root fo class
+	SetRootComponent(PickupTrigger);
+
+	//set the default size of the collision
+	PickupTrigger->SetCapsuleHalfHeight(100.0f);
+	PickupTrigger->SetCapsuleRadius(100.0f);
+
+	// creating static mesh
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
+	// attach to actor
+	Mesh->SetupAttachment(RootComponent);
+
+	// move mesh up by default
+	Mesh->SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f));
+
+	// turn collisions off on mesh
+	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    // default allowed pickup class
+	PickupActorClass= AActor::StaticClass();
 }
 
-// Called when the game starts or when spawned
-void AMGPickup::BeginPlay()
+void AMGPickup::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	Super::BeginPlay();
+	Super::NotifyActorBeginOverlap(OtherActor);
+
+	if (!HasAuthority())
+	{
+		return;
+	}
 	
+	if (OtherActor->GetClass()->IsChildOf(PickupActorClass))
+	{
+		ActivatePickup(OtherActor);
+	}
 }
 
-// Called every frame
-void AMGPickup::Tick(float DeltaTime)
+void AMGPickup::ActivatePickup(AActor* pickupActor)
 {
-	Super::Tick(DeltaTime);
+	BP_OnActivatePickup(pickupActor);
 
+	DeactivatePickup();
 }
+
+void AMGPickup::DeactivatePickup_Implementation()
+	{
+		//is this the server version
+		if (HasAuthority())
+		{
+			//if so, disable collision
+			PickupTrigger->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		}
+		//hide mesh
+		Mesh->SetVisibility(false, true);
+	}
+
 
