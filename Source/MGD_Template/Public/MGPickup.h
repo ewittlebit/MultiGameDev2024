@@ -35,6 +35,9 @@ protected:
     UFUNCTION(NetMulticast, Reliable, Category=Replication)
 	void DeactivatePickup();
 
+	UFUNCTION(NetMulticast, Reliable, Category=Replication)
+    void ReactivatePickup();
+	
 	UPROPERTY(EditDefaultsOnly, Category=Pickup)
 	TSubclassOf<AActor> PickupActorClass;
 };

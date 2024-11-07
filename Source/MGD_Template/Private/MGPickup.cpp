@@ -9,6 +9,8 @@ AMGPickup::AMGPickup()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	SetReplicates(true);
+
 	// create the component
 	PickupTrigger = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Collision"));
 	// set component to be root fo class
@@ -53,6 +55,18 @@ void AMGPickup::ActivatePickup(AActor* pickupActor)
 	BP_OnActivatePickup(pickupActor);
 
 	DeactivatePickup();
+}
+
+void AMGPickup::ReactivatePickup_Implementation()
+{
+	//is this server version
+	if (HasAuthority());
+	{
+		PickupTrigger->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	}
+
+	// regardless of server or client reveal mesh
+	Mesh->SetVisibility(true, true);
 }
 
 void AMGPickup::DeactivatePickup_Implementation()
