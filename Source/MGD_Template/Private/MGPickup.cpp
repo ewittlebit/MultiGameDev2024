@@ -58,35 +58,36 @@ void AMGPickup::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	
-// spinning mesh based on rotation speed
+	// spinning mesh based on rotation speed
 	Mesh->AddLocalRotation(FRotator(0.0f, MeshRotateSpeed * DeltaSeconds, 0.0f));
-
-void AMGPickup::ActivatePickup(AActor* pickupActor)
-{
-	BP_OnActivatePickup(pickupActor);
-
-	DeactivatePickup();
-	
-    if (ResetTime > 0.0f)
-    {
-    	// if so set timer to reactivate pickup
-	    GetWorld()->GetTimerManager().SetTimer(TH_ReactivateTimer, this, &AMGPickup::ReactivatePickup, ResetTime);
-    }
 }
 
-void AMGPickup::ReactivatePickup_Implementation()
-{
-	//is this server version
-	if (HasAuthority())
+	void AMGPickup::ActivatePickup(AActor* pickupActor)
 	{
-		PickupTrigger->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		BP_OnActivatePickup(pickupActor);
+
+		DeactivatePickup();
+	
+		if (ResetTime > 0.0f)
+		{
+			// if so set timer to reactivate pickup
+			GetWorld()->GetTimerManager().SetTimer(TH_ReactivateTimer, this, &AMGPickup::ReactivatePickup, ResetTime);
+		}
 	}
 
-	// regardless of server or client reveal mesh
-	Mesh->SetVisibility(true, true);
-}
+	void AMGPickup::ReactivatePickup_Implementation()
+	{
+		//is this server version
+		if (HasAuthority())
+		{
+			PickupTrigger->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		}
 
-void AMGPickup::DeactivatePickup_Implementation()
+		// regardless of server or client reveal mesh
+		Mesh->SetVisibility(true, true);
+	}
+
+	void AMGPickup::DeactivatePickup_Implementation()
 	{
 		//is this the server version
 		if (HasAuthority())
@@ -97,5 +98,6 @@ void AMGPickup::DeactivatePickup_Implementation()
 		//hide mesh
 		Mesh->SetVisibility(false, true);
 	}
+
 
 
